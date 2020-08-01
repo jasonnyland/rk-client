@@ -54,5 +54,6 @@ sed -i "s/\($pass *= *\).*/\1$b3/" ./docker-compose.yml
 
 ### configure nginx reverse proxy ###
 mv -f ./default /home/ubuntu/docker/letsencrypt/config/nginx/site-confs/
+systemctl restart docker
 docker container restart letsencrypt
  
