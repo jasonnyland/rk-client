@@ -23,35 +23,36 @@ systemctl status docker
 
 ### setup directories ###
 cd /home/ubuntu/
-mkdir -p ./docker/letsencrypt/config
-mkdir -p ./docker/webdav/public
+mkdir -p /home/ubuntu/docker/letsencrypt/config
+mkdir -p /home/ubuntu/docker/webdav/public
+mkdir -p /home/ubuntu/docker/letsencrypt/config/nginx/site-confs/
 
 ### install docker-compose ###
 curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
+### update parameters in docker/nginx configs ###
 cd /home/ubuntu/rk-client
-#set url
-    url=URL
-    srv=server_name
-    name=WEBDAV_USERNAME
-    pass=WEBDAV_PASSWORD
-    b2=Lrsp8fEfIuGFxWR2s4vj
-    b3=l58vPPTyeUWe1sxTe3ZN
-	sed -i "s/\($url *= *\).*/\1$1/" ./docker-compose.yml
-	sed -i "s/\($srv *\).*/\1$1/" ./default
-	# set new username/password
-	sed -i "s/\($name *= *\).*/\1$2/" ./docker-compose.yml
-	sed -i "s/\($pass *= *\).*/\1$3/" ./docker-compose.yml
-	# run compose
-	docker-compose up -d
-	# remove plaintext user data from dockerfile
-	sed -i "s/\($name *= *\).*/\1$b2/" ./docker-compose.yml
-	sed -i "s/\($pass *= *\).*/\1$b3/" ./docker-compose.yml
+url=URL
+srv=server_name
+name=WEBDAV_USERNAME
+pass=WEBDAV_PASSWORD
+b2=Lrsp8fEfIuGFxWR2s4vj
+b3=l58vPPTyeUWe1sxTe3ZN
+# set domain in docker-compose.yml and default
+sed -i "s/\($url *= *\).*/\1$1/" ./docker-compose.yml
+sed -i "s/\($srv *\).*/\1$1/" ./default
+# set username/password from input parameters
+sed -i "s/\($name *= *\).*/\1$2/" ./docker-compose.yml
+sed -i "s/\($pass *= *\).*/\1$3/" ./docker-compose.yml
+# launch docker containers
+docker-compose up -d
+# remove plaintext user data from dockerfile
+sed -i "s/\($name *= *\).*/\1$b2/" ./docker-compose.yml
+sed -i "s/\($pass *= *\).*/\1$b3/" ./docker-compose.yml
 
 ### configure nginx reverse proxy ###
-mkdir -p /home/ubuntu/docker/letsencrypt/config/nginx/site-confs/
 mv -f ./default /home/ubuntu/docker/letsencrypt/config/nginx/site-confs/
 docker container restart letsencrypt
  
