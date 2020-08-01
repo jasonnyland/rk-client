@@ -14,13 +14,11 @@ services:
       - PUID=1000
       - PGID=1000
       - EMAIL=admin@robotkeys.com
-      - URL=new.robotkeys.com
+      - URL=doot2.robotkeys.com
       - TZ=America/Los_Angeles
   webdav:
     image: wheatstalk/docker-php-webdav
     container_name: webdav
- #   ports:
- #     - 8080:80
     volumes:
       - /home/ubuntu/docker/webdav/public:/var/webdav/public
     restart:
@@ -28,4 +26,3 @@ services:
     environment:
       - WEBDAV_USERNAME=Lrsp8fEfIuGFxWR2s4vj
       - WEBDAV_PASSWORD=l58vPPTyeUWe1sxTe3ZN
- 
